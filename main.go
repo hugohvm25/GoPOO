@@ -19,6 +19,15 @@ numeroAgencia := 555
 numeroConta := 1234
 saldo := 150.25
 
+
+# Mesmo sem atribuir valor às variáveis, o GO inicializa com as "Zero Initialization"
+bool = false
+int = 0
+float = 0
+string = ""
+struct = {}
+
+
 */
 
 package main
@@ -40,5 +49,19 @@ func main() {
 
 	fmt.Println(contaHugo)
 	fmt.Println(contaIsabela)
+
+	//Criando uma nova conta/variável na estrutura
+	// sem colocar * o Go não entende de onde puxar a informação; se é da estrutura ou da nova ContaCorrente criada depois
+	var contaLaura *ContaCorrente
+	// criação de um novo bloco de dados para a estrutura
+	contaLaura = new(ContaCorrente)
+	// atribuição dos dados exigidos pela estrutura para a Nova ContaCorrente
+	contaLaura.titular = "Laura"
+	contaLaura.numeroAgencia = 2222
+
+	// irá gerar no console a informação sem rotulação porém com os dados informados
+	fmt.Println(contaLaura)
+	// irá gerar no console a informação com rotulação (nome atribuido) com os dados informados
+	fmt.Println(*contaLaura)
 
 }
