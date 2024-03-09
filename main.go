@@ -28,6 +28,35 @@ string = ""
 struct = {}
 
 
+//Criando uma nova conta/variável na estrutura
+
+// sem colocar * o Go não entende de onde puxar a informação; se é da estrutura ou da nova ContaCorrente criada depois
+	var contaLaura *ContaCorrente
+
+// criação de um novo bloco de dados para a estrutura
+	contaLaura = new(ContaCorrente)
+
+// atribuição dos dados exigidos pela estrutura para a Nova ContaCorrente
+	contaLaura.titular = "Laura"
+	contaLaura.numeroAgencia = 222
+
+// irá gerar no console a informação SEM rotulação porém com os dados informados
+	fmt.Println(contaLaura)
+	// console // &{Laura 222 0 0} => onde o & é um endereço
+
+// irá gerar no console a informação COM rotulação (nome atribuido) com os dados informados
+	fmt.Println(*contaLaura)
+	// console // {Laura 222 0 0}
+
+
+# metodo de comparação e verificação se os 2 blocos de dados (conteúdo) são iguais ou diferentes
+
+	contaHugo := ContaCorrente{titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.25}
+	contaHugo2 := ContaCorrente{titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.25}
+
+	fmt.Println(contaHugo == contaHugo2)
+	// console // true (retorna um boolenado informando que é verdandeiro apesar de serem contas diferentes pois possuem os mesmos dados)
+
 */
 
 package main
@@ -49,19 +78,5 @@ func main() {
 
 	fmt.Println(contaHugo)
 	fmt.Println(contaIsabela)
-
-	//Criando uma nova conta/variável na estrutura
-	// sem colocar * o Go não entende de onde puxar a informação; se é da estrutura ou da nova ContaCorrente criada depois
-	var contaLaura *ContaCorrente
-	// criação de um novo bloco de dados para a estrutura
-	contaLaura = new(ContaCorrente)
-	// atribuição dos dados exigidos pela estrutura para a Nova ContaCorrente
-	contaLaura.titular = "Laura"
-	contaLaura.numeroAgencia = 2222
-
-	// irá gerar no console a informação sem rotulação porém com os dados informados
-	fmt.Println(contaLaura)
-	// irá gerar no console a informação com rotulação (nome atribuido) com os dados informados
-	fmt.Println(*contaLaura)
 
 }
