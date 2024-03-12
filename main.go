@@ -84,43 +84,83 @@ type contaCorrente struct {
 
 func main() {
 
-	contaHugo := contaCorrente{titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.10} // forma extensa de passar os dados para a estrutura
-	//contaIsabela := ContaCorrente{"Isabela", 500, 4321, 100.00}                                       // forma curta de passar dados para a estrutura
+	contaHugo := contaCorrente{titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 500} // forma extensa de passar os dados para a estrutura
+	contaIsabela := contaCorrente{"Isabela", 500, 4321, 100.00}                                    // forma curta de passar dados para a estrutura
 
+	fmt.Println("Dados das Contas:")
 	fmt.Println(contaHugo)
-	//fmt.Println(contaIsabela)
+	fmt.Println(contaIsabela)
+	fmt.Println("")
 
-	fmt.Println(contaHugo.saldo)
-	fmt.Println(contaHugo.sacarDinheiro(50))
-	fmt.Println(contaHugo.saldo)
+	fmt.Println("Conta do:", contaHugo.titular, "-", "Saldo atualizado:", contaHugo.saldo)
+	fmt.Println("Conta da:", contaIsabela.titular, "-", "Saldo atualizado:", contaIsabela.saldo)
+	fmt.Println("")
 
-	fmt.Println(contaHugo.depositarDinheiro(200))
-	fmt.Println(contaHugo.saldo)
+	statusSaque, valor2 := contaHugo.sacarDinheiro(100)
+	fmt.Println(contaHugo.titular, "sacou o valor:", valor2, "-", statusSaque)
+	fmt.Println("Conta do:", contaHugo.titular, "-", "Saldo atualizado:", contaHugo.saldo)
+	fmt.Println("")
+
+	statusDeposito, valor := contaHugo.depositarDinheiro(300)
+	fmt.Println(contaHugo.titular, "depositou o valor:", valor, "-", statusDeposito)
+	fmt.Println("Conta do:", contaHugo.titular, "-", "Saldo atualizado:", contaHugo.saldo)
+	fmt.Println("")
+
+	statusTransf, valorTransf := contaHugo.transferencia(100, &contaIsabela) // conta de origem da transação, comando(valor da transf, conta destino com identificador &)
+	// para identificar para qual conta vai ser transferido o valor, é preciso usar o & que vai direcionar ao endereço daquela conta em específico.
+	fmt.Println("A transferência ocorreu?", statusTransf)
+	fmt.Println("O valor tranferido de", contaHugo.titular, "para", contaIsabela.titular, "foi:", valorTransf)
+	fmt.Println("Conta do:", contaHugo.titular, "-", "Saldo atualizado:", contaHugo.saldo)
+	fmt.Println("Conta da:", contaIsabela.titular, "-", "Saldo atualizado:", contaIsabela.saldo)
+	fmt.Println("")
+
 }
 
-func (c *contaCorrente) sacarDinheiro(valorSaque float64) string {
-	// o comando c *contaCorrente é abreviado para referenciar a estrutura que vai ser utilizada podendo também
-	// o nome da estrutura, no caso contaCorrente porém não é a forma comum em Go
+func (c *contaCorrente) sacarDinheiro(valorSaque float64) (string, float64) {
+	/*o comando c *contaCorrente é abreviado para referenciar a estrutura que vai ser utilizada podendo também
+	o nome da estrutura, no caso contaCorrente porém não é a forma comum em Go
+
+	Outra forma de escrita:
 	saquePermitido := valorSaque > 0 && valorSaque <= c.saldo
-	// o && é uma forma de adicionar outra condição para verificação para que seja true ou false e continuar o código
-	// no caso o valor do saque tem que ser maior que zero ou positivo e ser menor ou igual ao saldo da conta
+	if saquePermitido {
+		c.saldo -= valorSaque
 
-	if saquePermitido { // se a condição acima for true, segue, senão pula para o else
+	o && é uma forma de adicionar outra condição para verificação para que seja true ou false e continuar o código
+	no caso o valor do saque tem que ser maior que zero ou positivo e ser menor ou igual ao saldo da conta
+	*/
+
+	if valorSaque > 0 && valorSaque <= c.saldo { // se a condição acima for true, segue, senão pula para o else
 		c.saldo -= valorSaque // decrementa o valor do saque anterior pelo falor informado ==> c.saldo = contaHugo.saldo - valorSaque
-		return "Saque realizado com sucesso"
+		return "Saque realizado com sucesso", valorSaque
 	} else {
-		return "Saldo insuficiente"
+		return "Saldo insuficiente", valorSaque
 	}
 }
 
-func (c *contaCorrente) depositarDinheiro(valorDeposito float64) string {
+func (c *contaCorrente) depositarDinheiro(valorDeposito float64) (string, float64) {
 
-	depositoPermitido := valorDeposito > 0
-	if depositoPermitido {
+	if valorDeposito > 0 {
 		c.saldo += valorDeposito
-		return "Depósito realizado com sucesso"
+		return "Depósito realizado com sucesso", valorDeposito
 	} else {
-		return "Depósito negado"
+		return "Depósito negado", valorDeposito
 	}
+}
+
+func (c *contaCorrente) transferencia(valorTransferido float64, contaDestino *contaCorrente) (bool, float64) {
+	if valorTransferido > 0 && valorTransferido <= c.saldo {
+		c.saldo -= valorTransferido
+		contaDestino.depositarDinheiro(valorTransferido)
+		return true, valorTransferido
+	} else {
+		return false, valorTransferido
+	}
+	/*
+		a função deve ter o identificador de qual conta(dado) que deseja buscar. Passa um valor de transferência, e a conta de destino
+		pega a referência também pelo identificador.
+		faz a verificação para que o valor tranferido seja sempre positivo e menor ou igual ao saldo da conta obrigatóriamente.
+		o valor da transferência é diminuido do saldo
+		a conta de destino recebe o comando de depósito do valor transferido.
+	*/
 
 }
