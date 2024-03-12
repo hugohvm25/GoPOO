@@ -57,6 +57,17 @@ struct = {}
 	fmt.Println(contaHugo == contaHugo2)
 	// console // true (retorna um boolenado informando que é verdandeiro apesar de serem contas diferentes pois possuem os mesmos dados)
 
+
+
+	contaHugo := contaCorrente{titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.25}
+	fmt.PrintLn(contaHugo.saldo)
+	// console // 150.25
+
+	valorSaque = 50
+	contaHugo.saldo = contaHugo.saldo - valorSaque
+	fmt.Println(contaHugo.saldo)
+	// console // 100.25
+
 */
 
 package main
@@ -64,7 +75,7 @@ package main
 import "fmt"
 
 //criação de uma estrutura com variáveis que serão usadas com frequencia para não serem repetidas
-type ContaCorrente struct {
+type contaCorrente struct {
 	titular       string
 	numeroAgencia int
 	numeroConta   int
@@ -73,10 +84,43 @@ type ContaCorrente struct {
 
 func main() {
 
-	contaHugo := ContaCorrente{titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.25} // forma extensa de passar os dados para a estrutura
-	contaIsabela := ContaCorrente{"Isabela", 500, 4321, 100.00}                                       // forma curta de passar dados para a estrutura
+	contaHugo := contaCorrente{titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.10} // forma extensa de passar os dados para a estrutura
+	//contaIsabela := ContaCorrente{"Isabela", 500, 4321, 100.00}                                       // forma curta de passar dados para a estrutura
 
 	fmt.Println(contaHugo)
-	fmt.Println(contaIsabela)
+	//fmt.Println(contaIsabela)
+
+	fmt.Println(contaHugo.saldo)
+	fmt.Println(contaHugo.sacarDinheiro(50))
+	fmt.Println(contaHugo.saldo)
+
+	fmt.Println(contaHugo.depositarDinheiro(200))
+	fmt.Println(contaHugo.saldo)
+}
+
+func (c *contaCorrente) sacarDinheiro(valorSaque float64) string {
+	// o comando c *contaCorrente é abreviado para referenciar a estrutura que vai ser utilizada podendo também
+	// o nome da estrutura, no caso contaCorrente porém não é a forma comum em Go
+	saquePermitido := valorSaque > 0 && valorSaque <= c.saldo
+	// o && é uma forma de adicionar outra condição para verificação para que seja true ou false e continuar o código
+	// no caso o valor do saque tem que ser maior que zero ou positivo e ser menor ou igual ao saldo da conta
+
+	if saquePermitido { // se a condição acima for true, segue, senão pula para o else
+		c.saldo -= valorSaque // decrementa o valor do saque anterior pelo falor informado ==> c.saldo = contaHugo.saldo - valorSaque
+		return "Saque realizado com sucesso"
+	} else {
+		return "Saldo insuficiente"
+	}
+}
+
+func (c *contaCorrente) depositarDinheiro(valorDeposito float64) string {
+
+	depositoPermitido := valorDeposito > 0
+	if depositoPermitido {
+		c.saldo += valorDeposito
+		return "Depósito realizado com sucesso"
+	} else {
+		return "Depósito negado"
+	}
 
 }
