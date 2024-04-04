@@ -8,7 +8,7 @@ Criação de um gerenciador de contas de um banco
 var Titular string = "Hugo"
 var numeroAgencia int = 555
 var numeroConta int = 123456
-var saldo float64 = 150.25
+var ConsultaSaldo float64 = 150.25
 
 ou
 
@@ -17,7 +17,7 @@ ou
 Titular := "Hugo"
 numeroAgencia := 555
 numeroConta := 1234
-saldo := 150.25
+ConsultaSaldo := 150.25
 
 
 # Mesmo sem atribuir valor às variáveis, o GO inicializa com as "Zero Initialization"
@@ -51,21 +51,21 @@ struct = {}
 
 # metodo de comparação e verificação se os 2 blocos de dados (conteúdo) são iguais ou diferentes
 
-	contaHugo := ContaCorrente{Titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.25}
-	contaHugo2 := ContaCorrente{Titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.25}
+	contaHugo := ContaCorrente{Titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, ConsultaSaldo: 150.25}
+	contaHugo2 := ContaCorrente{Titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, ConsultaSaldo: 150.25}
 
 	fmt.Println(contaHugo == contaHugo2)
 	// console // true (retorna um boolenado informando que é verdandeiro apesar de serem contas diferentes pois possuem os mesmos dados)
 
 
 
-	contaHugo := ContaCorrente{Titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, saldo: 150.25}
-	fmt.PrintLn(contaHugo.saldo)
+	contaHugo := ContaCorrente{Titular: "Hugo", numeroAgencia: 555, numeroConta: 1234, ConsultaSaldo: 150.25}
+	fmt.PrintLn(contaHugo.ConsultaSaldo)
 	// console // 150.25
 
 	valorSaque = 50
-	contaHugo.saldo = contaHugo.saldo - valorSaque
-	fmt.Println(contaHugo.saldo)
+	contaHugo.ConsultaSaldo = contaHugo.ConsultaSaldo - valorSaque
+	fmt.Println(contaHugo.ConsultaSaldo)
 	// console // 100.25
 
 
@@ -91,39 +91,39 @@ import (
 
 func main() {
 
-	//criando o campo de cliente e conta baseada na composição das 2 structs importadas
-	clienteHugo := clientes.Titular{"Hugo", "123.123.123-12"}
-	contaHugo := contas.ContaCorrente{clienteHugo, 555, 1234, 500}
+	// criando o campo de cliente e conta baseada na composição das 2 structs importadas
+	clienteHugo := clientes.Titular{"Hugo", "123.123.123-12"}          //aqui eu chamo a Structure com {}
+	contaHugo := contas.NovaContaCorrente(clienteHugo, 555, 1234, 500) // aqui eu uso a função com ()
 
 	clienteIsabela := clientes.Titular{"Isabela", "111.222.333.44"}
-	contaIsabela := contas.ContaCorrente{clienteIsabela, 500, 4321, 200}
+	contaIsabela := contas.NovaContaCorrente(clienteIsabela, 500, 4321, 300)
 
-	// contaHugo := contas.ContaCorrente{Titular: "Hugo", NumeroAgencia: 555, NumeroConta: 1234, Saldo: 500}
-	// contaIsabela := contas.ContaCorrente{Titular: "Isabela", NumeroAgencia: 500, NumeroConta: 4321, Saldo: 100}
+	//contaHugo := contas.ContaCorrente{Titular: "Hugo", NumeroAgencia: 555, NumeroConta: 1234, ConsultaSaldo: 500}
+	// contaIsabela := contas.ContaCorrente{Titular: "Isabela", NumeroAgencia: 500, NumeroConta: 4321, ConsultaSaldo: 100}
 
 	fmt.Println("Dados das Contas:")
 	fmt.Println(contaHugo)
 	fmt.Println(contaIsabela)
 	fmt.Println("")
 
-	fmt.Println("Conta do:", contaHugo.Titular, "-", "Saldo atualizado:", contaHugo.Saldo)
-	fmt.Println("Conta da:", contaIsabela.Titular, "-", "Saldo atualizado:", contaIsabela.Saldo)
+	fmt.Println("Conta do:", contaHugo.Titular, "-", "ConsultaSaldo atualizado:", contaHugo.ConsultaSaldo())
+	fmt.Println("Conta da:", contaIsabela.Titular, "-", "ConsultaSaldo atualizado:", contaIsabela.ConsultaSaldo())
 	fmt.Println("")
 
 	statusSaque, valor2 := contaHugo.SacarDinheiro(100)
 	fmt.Println(contaHugo.Titular, "sacou o valor:", valor2, "-", statusSaque)
-	fmt.Println("Conta do:", contaHugo.Titular, "-", "Saldo atualizado:", contaHugo.Saldo)
+	fmt.Println("Conta do:", contaHugo.Titular, "-", "ConsultaSaldo atualizado:", contaHugo.ConsultaSaldo())
 	fmt.Println("")
 
 	statusDeposito, valor := contaHugo.DepositarDinheiro(300)
 	fmt.Println(contaHugo.Titular, "depositou o valor:", valor, "-", statusDeposito)
-	fmt.Println("Conta do:", contaHugo.Titular, "-", "Saldo atualizado:", contaHugo.Saldo)
+	fmt.Println("Conta do:", contaHugo.Titular, "-", "ConsultaSaldo atualizado:", contaHugo.ConsultaSaldo())
 	fmt.Println("")
 
-	statusTransf, valorTransf := contaHugo.Transferencia(100, &contaIsabela)
+	statusTransf, valorTransf := contaHugo.Transferencia(100, contaIsabela)
 	fmt.Println("A transferência ocorreu?", statusTransf)
 	fmt.Println("O valor tranferido de", contaHugo.Titular, "para", contaIsabela.Titular, "foi:", valorTransf)
-	fmt.Println("Conta do:", contaHugo.Titular, "-", "Saldo atualizado:", contaHugo.Saldo)
-	fmt.Println("Conta da:", contaIsabela.Titular, "-", "Saldo atualizado:", contaIsabela.Saldo)
+	fmt.Println("Conta do:", contaHugo.Titular, "-", "ConsultaSaldo atualizado:", contaHugo.ConsultaSaldo)
+	fmt.Println("Conta da:", contaIsabela.Titular, "-", "ConsultaSaldo atualizado:", contaIsabela.ConsultaSaldo)
 	fmt.Println("")
 }
