@@ -75,25 +75,13 @@ struct = {}
 
 	package="example.com/hello/go/src/GoPOO"
 
+
+
 	files=[C:\Users\Hugo\go\src\GoPOO\main.go]
 
 
-*/
 
-package main
 
-import (
-	"fmt"
-
-	"example.com/hello/go/src/GoPOO/clientes"
-	"example.com/hello/go/src/GoPOO/contas"
-)
-
-func main() {
-
-	// criando o campo de cliente e conta baseada na composição das 2 structs importadas
-	clienteHugo := clientes.Titular{"Hugo", "123.123.123-12"}          //aqui eu chamo a Structure com {}
-	contaHugo := contas.NovaContaCorrente(clienteHugo, 555, 1234, 500) // aqui eu uso a função com ()
 
 	clienteIsabela := clientes.Titular{"Isabela", "111.222.333.44"}
 	contaIsabela := contas.NovaContaCorrente(clienteIsabela, 500, 4321, 300)
@@ -110,13 +98,13 @@ func main() {
 	fmt.Println("Conta da:", contaIsabela.Titular, "-", "ConsultaSaldo atualizado:", contaIsabela.ConsultaSaldo())
 	fmt.Println("")
 
-	statusSaque, valor2 := contaHugo.SacarDinheiro(100)
-	fmt.Println(contaHugo.Titular, "sacou o valor:", valor2, "-", statusSaque)
+	statusSaque, valor1 := contaHugo.SacarDinheiro(100)
+	fmt.Println(contaHugo.Titular, "sacou o valor:", valor1, "-", statusSaque)
 	fmt.Println("Conta do:", contaHugo.Titular, "-", "ConsultaSaldo atualizado:", contaHugo.ConsultaSaldo())
 	fmt.Println("")
 
-	statusDeposito, valor := contaHugo.DepositarDinheiro(300)
-	fmt.Println(contaHugo.Titular, "depositou o valor:", valor, "-", statusDeposito)
+	statusDeposito, valor2 := contaHugo.DepositarDinheiro(300)
+	fmt.Println(contaHugo.Titular, "depositou o valor:", valor2, "-", statusDeposito)
 	fmt.Println("Conta do:", contaHugo.Titular, "-", "ConsultaSaldo atualizado:", contaHugo.ConsultaSaldo())
 	fmt.Println("")
 
@@ -126,4 +114,37 @@ func main() {
 	fmt.Println("Conta do:", contaHugo.Titular, "-", "ConsultaSaldo atualizado:", contaHugo.ConsultaSaldo)
 	fmt.Println("Conta da:", contaIsabela.Titular, "-", "ConsultaSaldo atualizado:", contaIsabela.ConsultaSaldo)
 	fmt.Println("")
+
+
+*/
+
+package main
+
+import (
+	"fmt"
+
+	"example.com/hello/go/src/GoPOO/contas"
+)
+
+func Boleto(conta verificarConta, valorBoleto float64) {
+	conta.SacarDinheiro(valorBoleto)
+}
+
+type verificarConta interface {
+	SacarDinheiro(valor float64) string
+}
+
+func main() {
+
+	contaHugo := contas.ContaPoupanca{}
+	contaHugo.DepositarDinheiro(100)
+	Boleto(&contaHugo, 55) // deve ser utilizado o & na conta para que seja identificada pois não tem uma chamada de identificador na função porque é uma func genérica
+
+	fmt.Println(contaHugo.ConsultaSaldo())
+
+	contaIsabela := contas.ContaCorrente{}
+	contaIsabela.DepositarDinheiro(100)
+	Boleto(&contaIsabela, 10)
+
+	fmt.Println(contaIsabela.ConsultaSaldo())
 }

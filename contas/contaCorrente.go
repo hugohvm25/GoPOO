@@ -50,33 +50,33 @@ func NovaContaCorrente(titular clientes.Titular, numeroAgencia int, numeroConta 
 	}
 }
 
-func (c *ContaCorrente) SacarDinheiro(valorSaque float64) (bool, float64) {
+func (c *ContaCorrente) SacarDinheiro(valorSaque float64) string {
 	if valorSaque > 0 && valorSaque <= c.saldo {
 		c.saldo -= valorSaque
-		return true, valorSaque
+		return "Saque realizado com sucesso"
 	} else {
-		return false, 0
+		return "Saldo insuficiente"
 	}
 }
 
-func (c *ContaCorrente) DepositarDinheiro(valorDeposito float64) (bool, float64) {
+func (c *ContaCorrente) DepositarDinheiro(valorDeposito float64) (bool, string, float64) {
 	if valorDeposito > 0 {
 		c.saldo += valorDeposito
-		return true, c.saldo
+		return true, "Deposito realizado com sucesso", c.saldo
 	} else {
-		return false, c.saldo
+		return false, "Não foi possivel realizar o deposito", c.saldo
 	}
 }
 
-func (c *ContaCorrente) Transferencia(valorTransferido float64, contaDestino *ContaCorrente) (bool, float64) {
+func (c *ContaCorrente) Transferencia(valorTransferido float64, contaDestino *ContaCorrente) float64 {
 	if valorTransferido > 0 && valorTransferido <= c.saldo {
 		c.saldo -= valorTransferido
-		statusDeposito, _ := contaDestino.DepositarDinheiro(valorTransferido)
+		statusDeposito, _, _ := contaDestino.DepositarDinheiro(valorTransferido)
 		if statusDeposito {
-			return true, valorTransferido
+			return valorTransferido
 		}
 	}
-	return false, 0
+	return 0
 }
 
 func (c *ContaCorrente) ConsultaSaldo() float64 {
